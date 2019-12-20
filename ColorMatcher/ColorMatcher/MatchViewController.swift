@@ -10,10 +10,13 @@ import UIKit
 
 class MatchViewController: UIViewController {
 
+    var text: String?
+    @IBOutlet weak var timer: UILabel!
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+        timer.text = text!
     }
     
 

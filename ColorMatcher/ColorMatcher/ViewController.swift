@@ -21,11 +21,10 @@ class ViewController: UIViewController {
     var g: CGFloat = 0.0
     var b: CGFloat = 0.0
     
-    var randomR: CGFloat = CGFloat.random(in: 0...1)
-    var randomG: CGFloat = CGFloat.random(in: 0...1)
-    var randomB: CGFloat = CGFloat.random(in: 0...1)
-
-    
+    let randomR: CGFloat = CGFloat.random(in: 0...1)
+    let randomG: CGFloat = CGFloat.random(in: 0...1)
+    let randomB: CGFloat = CGFloat.random(in: 0...1)
+    let start = Date()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,53 +32,50 @@ class ViewController: UIViewController {
         
         print("Did load")
         
-        rValueLabel.text = "\(r)"
-        gValueLabel.text = "\(g)"
-        bValueLabel.text = "\(b)"
-        
         topView.backgroundColor = UIColor(red: randomR, green: randomG, blue: randomB, alpha:  1.0)
-        print("after: \(topView.backgroundColor)")
+        print("after: \(topView.backgroundColor!)")
     }
     
-    
-    @IBAction func changeRedValue(_ sender: UISlider) {
-        r = CGFloat(sender.value)
-        rValueLabel.text = "\(r)"
+    @IBAction func changeColor(_ sender: UISlider) {
+        switch sender.tag {
+        case 1:
+             r = CGFloat(sender.value)
+            rValueLabel.text = "\(r)"
+        case 2:
+             g = CGFloat(sender.value)
+            gValueLabel.text = "\(g)"
+        case 3:
+             b = CGFloat(sender.value)
+            bValueLabel.text = "\(b)"
+        default:
+            print("something went wrong")
+        }
+
+        bottomView.backgroundColor = UIColor(red: r, green: g, blue: b, alpha: 1.0)
     }
-    
-    
-    @IBAction func changeGreenValue(_ sender: UISlider) {
-        g = CGFloat(sender.value)
-        gValueLabel.text = "\(g)"
-    }
-    
-    
-    @IBAction func changeBlueValue(_ sender: UISlider) {
-        b = CGFloat(sender.value)
-        bValueLabel.text = "\(b)"
-    }
-    
     
     @IBAction func matchColors(_ sender: UIButton) {
-        let roundR = Double(round(1000*r)/1000)
-        let roundG = Double(round(1000*g)/1000)
-        let roundB = Double(round(1000*b)/1000)
-
-        let roundRandomR = Double(round(1000*randomR)/1000)
-        let roundRandomG = Double(round(1000*randomG)/1000)
-        let roundRandomB = Double(round(1000*randomB)/1000)
-
-        print("roundR: \(roundR)\nroundG: \(roundG)\nroundB: \(roundB)")
-        print("roundandomR: \(roundRandomR)\nroundRandomG: \(roundRandomG)\nroundRandomB: \(roundRandomB)")
+        print("r: \(r)\ng: \(g)\nb: \(b)")
+        print("randomR: \(randomR)\nrandomG: \(randomG)\nrandomB: \(randomB)")
         bottomView.backgroundColor = UIColor(red: r, green: g, blue: b, alpha: 1.0)
         
-        if (roundR == roundRandomR && roundG == roundRandomG && roundB == roundRandomB) {
-            print("Colors matched!")
+        if (abs(r-randomR) <= 0.02 && abs(g-randomG) <= 0.02 && abs(b - randomB) <= 0.02) {
+            self.performSegue(withIdentifier: "congratsView", sender: self)
         } else {
             print("Colors don't match!")
         }
     }
     
+    func showElapsedTime() -> String {
+        return "time: \(Date().timeIntervalSince(start).rounded()) seconds"
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "congratsView" {
+            let viewControllerB = segue.destination as! MatchViewController
+            viewControllerB.text = showElapsedTime()
+        }
+    }
 
 
 }
