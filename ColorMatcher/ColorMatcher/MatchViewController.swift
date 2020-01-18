@@ -43,7 +43,7 @@ class MatchViewController: UIViewController, UITableViewDataSource, UITableViewD
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-         if segue.identifier == "colorView" { // wrong identifier
+         if segue.identifier == "colorView" {
              let viewControllerB = segue.destination as! ViewController
              viewControllerB.highScoreArray = highScoreArray!
          } else {
