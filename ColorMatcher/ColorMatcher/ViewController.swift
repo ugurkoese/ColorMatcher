@@ -26,14 +26,18 @@ class ViewController: UIViewController {
     let randomB: CGFloat = CGFloat.random(in: 0...1)
     let start = Date()
     
+    var highScoreArray: [Double]? = []
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
         print("Did load")
+        print(highScoreArray!)
         
         topView.backgroundColor = UIColor(red: randomR, green: randomG, blue: randomB, alpha:  1.0)
         print("after: \(topView.backgroundColor!)")
+        
     }
     
     @IBAction func changeColor(_ sender: UISlider) {
@@ -66,17 +70,26 @@ class ViewController: UIViewController {
         }
     }
     
-    func showElapsedTime() -> String {
-        return "time: \(Date().timeIntervalSince(start).rounded()) seconds"
+    func showElapsedTime() -> Double {
+        return Date().timeIntervalSince(start).rounded()
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "congratsView" {
             let viewControllerB = segue.destination as! MatchViewController
-            viewControllerB.text = showElapsedTime()
+            let time = showElapsedTime()
+            addTimeToTable(time: time)
+            viewControllerB.time = time
+            viewControllerB.highScoreArray = highScoreArray!
         }
     }
 
-
+    func addTimeToTable(time: Double) {
+        highScoreArray!.append(time)
+        highScoreArray!.sort()
+        while highScoreArray!.count > 10 {
+            highScoreArray!.removeLast()
+        }
+    }
 }
 

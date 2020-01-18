@@ -8,26 +8,46 @@
 
 import UIKit
 
-class MatchViewController: UIViewController {
+class MatchViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+    
 
-    var text: String?
+    var time: Double?
     @IBOutlet weak var timer: UILabel!
+    @IBOutlet weak var highscoreTable: UITableView!
+    
+    var highScoreArray: [Double]?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        print(highScoreArray!)
+
+        
         // Do any additional setup after loading the view.
-        timer.text = text!
+        timer.text = "your time: \(time!) seconds"
+        highscoreTable.delegate = self
+        highscoreTable.dataSource = self
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+         return highScoreArray != nil ? highScoreArray!.count : 0
     }
-    */
-
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
+        let currentScore = highScoreArray![indexPath.row]
+        cell.textLabel?.text = "\(currentScore)"
+        cell.textLabel?.sizeToFit()
+        
+        return cell
+    }
+    
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+         if segue.identifier == "colorView" { // wrong identifier
+             let viewControllerB = segue.destination as! ViewController
+             viewControllerB.highScoreArray = highScoreArray!
+         } else {
+            print("wrong identifier")
+        }
+     }
 }
